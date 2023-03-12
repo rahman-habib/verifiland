@@ -1,0 +1,59 @@
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+import MainNav from "@/components/MainNav.vue";
+
+export default defineComponent({
+  components: {
+    MainNav,
+  },
+  setup() {
+    const showMenu = ref<boolean>(false);
+
+    return {
+      showMenu,
+    };
+  },
+});
+</script>
+<template>
+  <section class="w-full px-6 pb-12 antialiased bg-white">
+    <div class="mx-auto max-w-7xl">
+      <MainNav />
+      <section class="px-2 py-32 bg-white md:px-0">
+        <div class="container mx-auto text-center sm:px-4">
+          <h1
+            class="text-4xl font-extrabold leading-10 tracking-tight text-indigo-600 sm:text-5xl sm:leading-none md:text-6xl xl:text-7xl"
+          >
+            <span class="block">Verifiy the owner of a</span>
+            <span class="relative inline-block mt-3 text-indigo-600">land asset</span>
+          </h1>
+          <div
+            data-rounded="rounded-full"
+            class="relative flex items-center max-w-md mx-auto mt-12 overflow-hidden text-center rounded-full border"
+          >
+            <input
+              type="text"
+              name="email"
+              placeholder="Land ID"
+              class="w-full h-12 px-6 py-2 font-medium text-indigo-800 focus:outline-none"
+              data-primary="indigo-800"
+            />
+            <span class="relative top-0 right-0 block">
+              <button
+                type="button"
+                class="inline-flex items-center w-32 h-12 px-8 text-base font-bold leading-6 text-white transition duration-150 ease-in-out bg-indigo-400 border border-transparent hover:bg-indigo-700 focus:outline-none active:bg-indigo-700"
+                data-primary="indigo-600"
+              >
+                Search
+              </button>
+            </span>
+          </div>
+          <div class="mt-8 text-sm text-gray-500" data-primary="indigo-600">
+            Provide land unique ID for owner verification.
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</template>
+<style></style>
