@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsString,
   Matches,
   MaxLength,
@@ -23,6 +24,16 @@ export class User {
   })
   readonly password: string;
 
+  @IsNotEmpty()
+  publicAddress: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  nonce: number = Math.floor(Math.random() * 1000000);
+
   @Match(User, (s) => s.password, { message: "Password doesn't match" })
   passwordConfirm: string;
+}
+function Column(arg0: { unique: boolean }) {
+  throw new Error('Function not implemented.');
 }

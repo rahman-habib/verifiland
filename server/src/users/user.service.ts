@@ -29,6 +29,18 @@ export class UserService {
     return user;
   }
 
+  async getUserByPublicAddress(publicAddress: string) {
+    if (!publicAddress) {
+      return;
+    }
+    const user = await this.userModel
+      .findOne({
+        publicAddress,
+      })
+      .exec();
+    return user;
+  }
+
   async registerUser(createUserDto: CreateUserDto) {
     const createUser = new this.userModel(createUserDto);
     const user = await this.getUserByEmail(createUser.email);

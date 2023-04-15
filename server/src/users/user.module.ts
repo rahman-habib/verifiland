@@ -1,3 +1,4 @@
+import { EthereumStrategy } from './../strategy/ethereum.strategy';
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
@@ -32,6 +33,7 @@ import { LocalStrategy } from 'src/strategy/local.strategy';
     AuthService,
     JwtStrategy,
     LocalStrategy,
+    EthereumStrategy,
   ],
 })
 export class UserModule {}

@@ -19,6 +19,14 @@ export class AuthService {
     return null;
   }
 
+  async validateAddress(address: string): Promise<any> {
+    const user = await this.userService.getUserByPublicAddress(address);
+    if (user) {
+      return user;
+    }
+    return null;
+  }
+
   async login(user: any) {
     const payload = {
       username: user.email,

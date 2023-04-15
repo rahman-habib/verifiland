@@ -1,3 +1,4 @@
+import { EthereumStrategy } from './../strategy/ethereum.strategy';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
@@ -8,6 +9,7 @@ import { jwtConstants } from 'src/strategy/constants';
 import { UserService } from 'src/users/user.service';
 import { HashService } from 'src/users/hash.service';
 import { LocalStrategy } from 'src/strategy/local.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -23,8 +25,16 @@ import { LocalStrategy } from 'src/strategy/local.strategy';
         expiresIn: '60d',
       },
     }),
+    PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, LocalStrategy, HashService],
+  providers: [
+    AuthService,
+    UserService,
+    LocalStrategy,
+    EthereumStrategy,
+    HashService,
+  ],
+  exports: [EthereumStrategy, PassportModule],
 })
 export class AuthModule {}

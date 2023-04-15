@@ -12,12 +12,24 @@ export class User {
   fullname: string;
   @Prop({
     required: true,
+    unique: true,
   })
   email: string;
   @Prop({
     required: true,
   })
   password: string;
+
+  @Prop({
+    required: true,
+    unique: true,
+  })
+  publicAddress: string;
+
+  @Prop({
+    required: true,
+  })
+  nonce: number;
 
   @Prop({
     type: Array,

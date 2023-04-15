@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { HasRoles } from 'src/roles/has-roles.decorator';
@@ -13,6 +13,17 @@ export class UserController {
   @Get('')
   getUserByEmail(@Req() req) {
     return this.userService.getUserByEmail(req.user.username);
+  }
+
+  @Get('nonce')
+  async getUserNonceByAddress(@Query() query) {
+    const user = await this.userService.getUserByPublicAddress(
+      query.publicAddress,
+    );
+
+    if (user) {
+      return { nonce: user.nonce };
+    }
   }
 
   @HasRoles(Role.ADMIN)

@@ -17,6 +17,12 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @UseGuards(AuthGuard('ethereum'))
+  @Post(`/login-ethereum`)
+  async loginWithEthereum(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
   @Post(`/register`)
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.registerUser(createUserDto);
