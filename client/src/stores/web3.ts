@@ -47,6 +47,8 @@ export const useWeb3Store = defineStore({
           accounts = await window.ethereum.request({ method: 'eth_accounts' })
         }
         this.account = accounts[0]
+
+        return this.account
       } catch (e) {
         console.log('error in action registerWeb3', e)
       }

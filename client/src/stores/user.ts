@@ -7,6 +7,7 @@ interface User {
   fullname: string
   email: string
   password?: string
+  publicAddress?: string
   passwordConfirm?: string
 }
 
@@ -14,7 +15,7 @@ export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
     user: null as User | null,
-    accessToken: null as string,
+    accessToken: null as unknown as string,
     loading: false,
     error: null
   }),
@@ -26,20 +27,50 @@ export const useUserStore = defineStore({
         const response = await axios.post(`${API_URL}/auth/login`, { username, password })
         this.accessToken = response.data?.access_token
         await this.getProfile()
-      } catch (error) {
+      } catch (error: any) {
         this.error = error.response.data
         throw error.response.data
       } finally {
         this.loading = false
       }
     },
+    async loginWithAddress(publicAddress: string, signature: string) {
+      this.loading = true
+      try {
+        const response = await axios.post(`${API_URL}/auth/login-ethereum`, {
+          publicAddress,
+          signature
+        })
+        this.accessToken = response.data?.access_token
+        await this.getProfile()
+      } catch (error: any) {
+        this.error = error.response.data
+        throw error.response.data
+      } finally {
+        this.loading = false
+      }
+    },
+    async getNonce(publicAddress: string) {
+      this.loading = true
+      try {
+        const response = await axios.get(`${API_URL}/user/nonce?publicAddress=` + publicAddress)
+        return response.data?.nonce
+      } catch (error: any) {
+        console.log(error)
+        this.error = error.response.data
+        throw error.response.data
+      } finally {
+        this.loading = false
+      }
+    },
+
     async register(data: User) {
       this.loading = true
       try {
         const response = await axios.post(`${API_URL}/auth/register`, data)
         this.user = response.data
         await this.login(this.user.email, data.password)
-      } catch (error) {
+      } catch (error: any) {
         this.error = error.response.data
         throw error.response.data
       } finally {

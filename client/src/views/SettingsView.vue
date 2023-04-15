@@ -77,7 +77,6 @@ export default defineComponent({
     const registry = ref(false);
     const { isAdmin } = useUserStore();
     registry.value = isAdmin();
-    console.log(account);
 
     async function reqAdminAccess() {
       if (data.value.address.length > 0) {

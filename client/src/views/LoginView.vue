@@ -1,9 +1,7 @@
 <template>
   <AuthContainer>
-    <div class="w-full bg-white lg:w-6/12 xl:w-5/12">
-      <div
-        class="flex flex-col items-start justify-start w-full h-full p-10 lg:p-16 xl:p-24"
-      >
+    <div class="w-full bg-white lg:w-6/12 xl:w-5/12 flex flex-col justify-center">
+      <div class="flex flex-col items-start justify-start w-full p-10 lg:p-16 xl:p-24">
         <NotificationBar :color="Color.danger" :icon="mdiAlertCircle" v-if="error">
           <template #right>
             <span> {{ error }}</span>
@@ -16,7 +14,24 @@
             >sign up</router-link
           >
         </p>
-        <div class="relative w-full mt-10 space-y-8">
+        <div class="relative w-full mt-10 space-y-8" v-if="metaMaskLoginSupported">
+          <div class="relative">
+            <button
+              @click="loginWithMetamask"
+              class="inline-block w-full px-5 py-4 text-lg font-medium text-center text-white transition duration-200 bg-indigo-600 rounded-lg hover:bg-blue-700 ease flex justify-center items-center"
+              data-primary="blue-600"
+              data-rounded="rounded-lg"
+            >
+              <span class="mr-2">Sign in with metamask</span>
+              <img
+                class="w-8 h-8"
+                src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                alt="metamask-logo"
+              />
+            </button>
+          </div>
+        </div>
+        <div class="relative w-full mt-10 space-y-8" v-else>
           <div class="relative">
             <label class="font-medium text-gray-900">Email</label>
             <input
@@ -61,10 +76,10 @@ import NotificationBar from "@/components/NotificationBar.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { mdiAlertCircle } from "@mdi/js";
-import { storeToRefs } from "pinia";
 import { defineComponent, ref } from "vue";
 import { Color } from "@/stores/types";
 import { useUIStore } from "@/stores/ui";
+import { useLoginWithMetaMask } from "@/composables/useLoginWithMetaMask";
 export default defineComponent({
   components: {
     AuthContainer,
@@ -77,6 +92,7 @@ export default defineComponent({
     const password = ref<string>("");
 
     const { login } = useUserStore();
+    const { login: loginWithMetamask, metaMaskLoginSupported } = useLoginWithMetaMask();
     const { showLoader, hideLoader, showAlert } = useUIStore();
     const loginUser = () => {
       if (username.value && password.value) {
@@ -84,7 +100,6 @@ export default defineComponent({
         login(username.value, password.value)
           .then(() => {
             router.push("/assets");
-            // showAlert({ type: "success", message: "Welcome back!" });
           })
           .catch((err) => {
             error.value = err?.message;
@@ -102,6 +117,8 @@ export default defineComponent({
       username,
       password,
       mdiAlertCircle,
+      loginWithMetamask,
+      metaMaskLoginSupported,
     };
   },
 

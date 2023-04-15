@@ -53,7 +53,7 @@
             }}</span>
           </div>
           <div class="relative grid grid-cols-2 gap-2">
-            <div class="relative">
+            <div class="relative" v-if="!metaMaskLoginSupported">
               <label class="font-medium text-gray-900">Password</label>
               <input
                 type="password"
@@ -67,7 +67,7 @@
                 error.password
               }}</span>
             </div>
-            <div class="relative">
+            <div class="relative" v-if="!metaMaskLoginSupported">
               <label class="font-medium text-gray-900">Confirm Password</label>
               <input
                 type="password"
@@ -106,6 +106,8 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { defineComponent, ref } from "vue";
 import { Color } from "@/stores/types";
+import { useWeb3Store } from "@/stores/web3";
+import { useLoginWithMetaMask } from "@/composables/useLoginWithMetaMask";
 export default defineComponent({
   components: {
     AuthContainer,
@@ -119,9 +121,20 @@ export default defineComponent({
     const email = ref<string>("");
     const password = ref<string>("");
     const passwordConfirm = ref<string>("");
+    const { metaMaskLoginSupported } = useLoginWithMetaMask();
 
-    const registerUser = () => {
+    if (metaMaskLoginSupported) {
+      // set default password
+      password.value = passwordConfirm.value = "P@assw#12rd";
+    }
+
+    const registerUser = async () => {
+      const account = await useWeb3Store().getWeb3();
+      if (!account) {
+        throw new Error("Metamask Account not connected");
+      }
       register({
+        publicAddress: account,
         fullname: fullname.value,
         email: email.value,
         password: password.value,
@@ -147,6 +160,7 @@ export default defineComponent({
       Color,
       registerUser,
       mdiAlertCircle,
+      metaMaskLoginSupported,
     };
   },
 });
