@@ -23,6 +23,11 @@ type Land = {
   previous_owners: string[]
   created_at: number
   approved_at: number
+  fullname: string
+  lat: string
+  city: string
+  lga: string
+  long: string
   [index: number]: string | boolean | number
 }
 

@@ -47,7 +47,6 @@ export const useWeb3Store = defineStore({
           accounts = await window.ethereum.request({ method: 'eth_accounts' })
         }
         this.account = accounts[0]
-        console.log(accounts)
       } catch (e) {
         console.log('error in action registerWeb3', e)
       }
@@ -61,7 +60,7 @@ export const useWeb3Store = defineStore({
         this.landContract = await contract.at('0xF9114eDFc4191205B6a10241B67A9978b0a9055d')
       }
     },
-    async registerLand(data) {
+    async registerLand(data: any) {
       try {
         useUIStore().showLoader()
         await this.getWeb3()
@@ -75,7 +74,6 @@ export const useWeb3Store = defineStore({
         const buf = Buffer.from(JSON.stringify(data))
         const ipfsResult = await ipfs.add(buf)
         const result = await this.landContract.registerLand(ipfsResult.path, { from: this.account })
-        console.log(result)
         useUIStore().showAlert({ type: 'success', message: 'Asset registered successfully' })
         useUIStore().hideLoader()
         router.push('/assets')
@@ -90,7 +88,6 @@ export const useWeb3Store = defineStore({
         await this.getWeb3()
         await this.getContract()
         const ownedLands = await this.landContract.getOwnedLands.call({ from: this.account })
-        console.log(ownedLands)
         this.setAssets(ownedLands)
       } catch (error) {
         console.log(error)
@@ -101,7 +98,6 @@ export const useWeb3Store = defineStore({
         this.assets = []
         await this.getWeb3()
         await this.getContract()
-        console.log(this.account)
         const allLands = await this.landContract.getAllLands.call({ from: this.account })
         this.setAssets(allLands)
       } catch (error) {
@@ -119,7 +115,6 @@ export const useWeb3Store = defineStore({
           data.new_owner,
           { from: this.account }
         )
-        console.log(receipt)
         useUIStore().showAlert({
           type: 'success',
           message: 'Asset transfer request created successfully'
@@ -201,7 +196,6 @@ export const useWeb3Store = defineStore({
             ...JSON.parse(Buffer.concat(chunks).toString())
           }
           this.landOwnerIds.add(land['current_owner'])
-          console.log(this.landOwnerIds)
           this.assets.push(details)
         })
       }
@@ -223,7 +217,6 @@ export const useWeb3Store = defineStore({
             from: this.account
           }
         )
-        console.log(success)
         useUIStore().showAlert({ type: 'success', message: 'Asset transferred successfully' })
       } catch (error) {
         console.log(error)
@@ -261,6 +254,16 @@ export const useWeb3Store = defineStore({
         console.log(error)
       } finally {
         useUIStore().hideLoader()
+      }
+    },
+    async getLand(landId: string) {
+      try {
+        this.assets = []
+        await this.getWeb3()
+        await this.getContract()
+        return await this.landContract.getLand.call(landId, { from: this.account })
+      } catch (error) {
+        console.log(error)
       }
     }
   }

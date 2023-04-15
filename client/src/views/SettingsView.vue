@@ -43,7 +43,7 @@
               </div>
             </div>
           </tab>
-          <tab name="profile" title="Profile"> Profile </tab>
+          <!-- <tab name="profile" title="Profile"> Profile </tab> -->
         </tabs>
       </div>
     </div>
