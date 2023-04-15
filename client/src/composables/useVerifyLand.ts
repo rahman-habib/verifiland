@@ -3,6 +3,7 @@ import { useWeb3Store } from './../stores/web3'
 import { ref } from 'vue'
 import type { Land } from '@/stores/types'
 import { Buffer } from 'buffer'
+import { useUIStore } from '@/stores/ui'
 
 export function useVerifyLand() {
   const landId = ref('')
@@ -16,11 +17,18 @@ export function useVerifyLand() {
       }
       const res = await useWeb3Store().getLand(landId.value)
       if (res == undefined || !Array.isArray(res)) {
-        throw new Error('Land ID not valid')
+        useUIStore().showAlert({
+          type: 'danger',
+          message: "Land asset with the speicified ID doesn't exist"
+        })
       }
 
       displayModal(res)
     } catch (error) {
+      useUIStore().showAlert({
+        type: 'danger',
+        message: "Land asset with the speicified ID doesn't exist"
+      })
       console.log(error)
     }
   }

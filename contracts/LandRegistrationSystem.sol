@@ -95,8 +95,6 @@ contract LandRegistrationSystem {
                 created_at: lands[landId].created_at,
                 approved_at: lands[landId].approved_at
             });
-
-        // return data;
     }
 
     function updateLand(uint256 landId, string memory newIpfsHash1) public {
