@@ -1,3 +1,4 @@
+import { useUIStore } from './ui'
 import { API_URL } from './../services/config'
 import axios from 'axios'
 import { defineStore } from 'pinia'
@@ -9,13 +10,19 @@ interface User {
   password?: string
   publicAddress?: string
   passwordConfirm?: string
+  role?: Array<string>
 }
 
 export const useUserStore = defineStore({
   id: 'user',
-  state: () => ({
-    user: null as User | null,
-    accessToken: null as unknown as string,
+  state: (): {
+    user?: User | null
+    accessToken?: string | null
+    loading: boolean
+    error?: any
+  } => ({
+    user: null,
+    accessToken: null,
     loading: false,
     error: null
   }),
@@ -50,17 +57,17 @@ export const useUserStore = defineStore({
         this.loading = false
       }
     },
-    async getNonce(publicAddress: string) {
-      this.loading = true
+    async getUserByAddress(publicAddress: string) {
+      useUIStore().showLoader()
       try {
-        const response = await axios.get(`${API_URL}/user/nonce?publicAddress=` + publicAddress)
-        return response.data?.nonce
+        const response = await axios.get(`${API_URL}/user/address?publicAddress=` + publicAddress)
+        return response.data
       } catch (error: any) {
         console.log(error)
         this.error = error.response.data
         throw error.response.data
       } finally {
-        this.loading = false
+        useUIStore().hideLoader()
       }
     },
 
@@ -69,7 +76,11 @@ export const useUserStore = defineStore({
       try {
         const response = await axios.post(`${API_URL}/auth/register`, data)
         this.user = response.data
-        await this.login(this.user.email, data.password)
+        if (this.user?.publicAddress) {
+          await this.loginWithAddress(this.user.publicAddress, '')
+        } else if (this.user && data.password) {
+          await this.login(this.user.email, data.password)
+        }
       } catch (error: any) {
         this.error = error.response.data
         throw error.response.data
