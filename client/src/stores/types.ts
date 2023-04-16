@@ -21,6 +21,7 @@ type Land = {
   ipfsHash: string
   current_owner: string
   previous_owners: string[]
+  users?: Map<String, User>
   created_at: number
   approved_at: number
   fullname: string

@@ -17,7 +17,7 @@ export default defineComponent({
   setup() {
     const showMenu = ref<boolean>(false);
     const { landId, verify, isShowVerifyModal, closeVerifyModal, land } = useVerifyLand();
-    console.log(land);
+
     return {
       land,
       landId,

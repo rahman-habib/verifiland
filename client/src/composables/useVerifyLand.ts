@@ -1,13 +1,15 @@
+import { useUserStore } from '@/stores/user'
 import ipfs from '@/services/ipfs'
 import { useWeb3Store } from './../stores/web3'
 import { ref } from 'vue'
-import type { Land } from '@/stores/types'
+import type { Land, User } from '@/stores/types'
 import { Buffer } from 'buffer'
 import { useUIStore } from '@/stores/ui'
 
 export function useVerifyLand() {
   const landId = ref('')
   const land = ref<Land>()
+  const previousOwnerUsers = ref<Map<String, User>>(new Map())
   const isShowVerifyModal = ref<boolean>(false)
 
   const verify = async () => {
@@ -38,6 +40,18 @@ export function useVerifyLand() {
     for await (const chunk of ipfs.cat(detail['ipfsHash'])) {
       chunks.push(chunk)
     }
+
+    for (const owner of [...detail['previous_owners'], detail['current_owner']]) {
+      try {
+        const user = await useUserStore().getUserByAddress(owner)
+        if (user) {
+          previousOwnerUsers.value.set(owner, user)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     land.value = {
       current_owner: detail['current_owner'],
       created_at: detail['created_at'] * 1000,
@@ -45,6 +59,7 @@ export function useVerifyLand() {
       is_govt_approved: detail['is_govt_approved'],
       land_id: detail['land_id'],
       previous_owners: detail['previous_owners'],
+      users: previousOwnerUsers.value,
       ...JSON.parse(Buffer.concat(chunks).toString())
     }
     isShowVerifyModal.value = true
@@ -53,5 +68,5 @@ export function useVerifyLand() {
   const closeVerifyModal = () => {
     isShowVerifyModal.value = false
   }
-  return { verify, landId, isShowVerifyModal, closeVerifyModal, land }
+  return { verify, landId, isShowVerifyModal, closeVerifyModal, land, previousOwnerUsers }
 }
