@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -37,8 +41,16 @@ export class UserService {
       .findOne({
         publicAddress,
       })
+      .select('-role')
+      .select('-password')
+      .select('-_id')
       .exec();
-    return user;
+
+    if (user) {
+      return user;
+    }
+
+    throw new NotFoundException('User with the public address does not exist');
   }
 
   async registerUser(createUserDto: CreateUserDto) {
@@ -55,6 +67,19 @@ export class UserService {
     );
 
     return createUser.save();
+  }
+
+  async getUsersAddress() {
+    const allUsers = await this.getAllUsers();
+    const result = [];
+    allUsers.forEach((user) => {
+      result.push({
+        publicAdress: user.publicAddress,
+        fullname: user.fullname,
+      });
+    });
+
+    return result;
   }
 
   async getAllUsers() {

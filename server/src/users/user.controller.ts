@@ -15,15 +15,15 @@ export class UserController {
     return this.userService.getUserByEmail(req.user.username);
   }
 
-  @Get('nonce')
+  @Get('address')
   async getUserNonceByAddress(@Query() query) {
-    const user = await this.userService.getUserByPublicAddress(
-      query.publicAddress,
-    );
+    return await this.userService.getUserByPublicAddress(query.publicAddress);
+  }
 
-    if (user) {
-      return { nonce: user.nonce };
-    }
+  @UseGuards(AuthGuard('jwt'))
+  @Get('addresses')
+  async getUsersAddress() {
+    return await this.userService.getUsersAddress();
   }
 
   @HasRoles(Role.ADMIN)
