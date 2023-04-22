@@ -32,6 +32,12 @@ export class User {
   nonce: number;
 
   @Prop({
+    required: true,
+    unique: true,
+  })
+  nin: number;
+
+  @Prop({
     type: Array,
     enum: Array<Role>,
     default: ['USER'],

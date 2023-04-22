@@ -5,6 +5,7 @@ import {
   IsString,
   Matches,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 import { Match } from 'src/validator/match.decorator';
@@ -30,6 +31,11 @@ export class User {
   @IsNumber()
   @IsNotEmpty()
   nonce: number = Math.floor(Math.random() * 1000000);
+
+  @IsNumber({ maxDecimalPlaces: 0 })
+  @Min(10000000)
+  @IsNotEmpty()
+  nin: number;
 
   @Match(User, (s) => s.password, { message: "Password doesn't match" })
   passwordConfirm: string;

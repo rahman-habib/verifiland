@@ -141,7 +141,7 @@
                   as="a"
                   :class="'btn-primary'"
                   :icon-size="24"
-                  :label="'Surveyor Deeds'"
+                  :label="uploadedFileName"
                   :icon="mdiUpload"
                 />
                 <input
@@ -207,6 +207,7 @@ export default defineComponent({
 
   setup() {
     const data = ref<AssetData>({});
+    const uploadedFileName = ref("Asset File");
     const files = ref<UploadedFiles>({});
     const { registerLand } = useWeb3Store();
     const { showAlert } = useUIStore();
@@ -219,6 +220,7 @@ export default defineComponent({
         (event.target as HTMLInputElement).files ||
         (event as InputEvent).dataTransfer?.files;
       if (value) {
+        uploadedFileName.value = value[0].name;
         const reader = new FileReader();
         reader.readAsDataURL(value[0]);
         reader.onloadend = () => {
@@ -272,6 +274,7 @@ export default defineComponent({
     };
 
     return {
+      uploadedFileName,
       mdiHomeGroupPlus,
       mdiMapMarker,
       mdiUpload,

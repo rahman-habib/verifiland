@@ -33,7 +33,26 @@ export class UserService {
     return user;
   }
 
+  async getUserByNIN(nin: number) {
+    const user = await this.userModel
+      .findOne({
+        nin,
+      })
+      .exec();
+    return user;
+  }
+
   async getUserByPublicAddress(publicAddress: string) {
+    const user = this.getUserByPublicAddressOptional(publicAddress);
+
+    if (user) {
+      return user;
+    }
+
+    throw new NotFoundException('User with the public address does not exist');
+  }
+
+  async getUserByPublicAddressOptional(publicAddress: string) {
     if (!publicAddress) {
       return;
     }
@@ -46,11 +65,7 @@ export class UserService {
       .select('-_id')
       .exec();
 
-    if (user) {
-      return user;
-    }
-
-    throw new NotFoundException('User with the public address does not exist');
+    return user;
   }
 
   async registerUser(createUserDto: CreateUserDto) {
@@ -62,6 +77,26 @@ export class UserService {
         message: 'User with the email already exists.',
       });
     }
+
+    const ninUser = await this.getUserByNIN(createUser.nin);
+    if (ninUser) {
+      throw new BadRequestException({
+        statusCode: 400,
+        message: 'User with the national identifiation number already exists.',
+      });
+    }
+
+    const addUser = await this.getUserByPublicAddressOptional(
+      createUser.publicAddress,
+    );
+    if (addUser) {
+      throw new BadRequestException({
+        statusCode: 400,
+        message:
+          'User with the Ethereum address exists, login into your account instead.',
+      });
+    }
+
     createUser.password = await this.hashService.hashPassword(
       createUser.password,
     );

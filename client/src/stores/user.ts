@@ -10,6 +10,7 @@ interface User {
   password?: string
   publicAddress?: string
   passwordConfirm?: string
+  nin?: number
   role?: Array<string>
 }
 

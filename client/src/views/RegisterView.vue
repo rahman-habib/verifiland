@@ -52,6 +52,23 @@
               error.email
             }}</span>
           </div>
+          <div class="relative">
+            <label class="font-medium text-gray-900"
+              >National Identification Number</label
+            >
+            <input
+              type="text"
+              class="block w-full px-4 py-4 mt-2 text-xl placeholder-gray-400 bg-gray-200 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50"
+              data-primary="blue-600"
+              data-rounded="rounded-lg"
+              placeholder="Enter NIN"
+              v-model="nin"
+              pattern="[0-9]{11}"
+            />
+            <span class="text-xs text-red-600" v-if="error && error.nin">{{
+              error.nin
+            }}</span>
+          </div>
           <div class="relative grid grid-cols-2 gap-2">
             <div class="relative" v-if="!metaMaskLoginSupported">
               <label class="font-medium text-gray-900">Password</label>
@@ -119,6 +136,7 @@ export default defineComponent({
     const error = ref<{ [index: string]: string }>({});
     const fullname = ref<string>("");
     const email = ref<string>("");
+    const nin = ref<number>();
     const password = ref<string>("");
     const passwordConfirm = ref<string>("");
     const { metaMaskLoginSupported } = useLoginWithMetaMask();
@@ -137,6 +155,7 @@ export default defineComponent({
         publicAddress: account,
         fullname: fullname.value,
         email: email.value,
+        nin: Number(nin.value),
         password: password.value,
         passwordConfirm: passwordConfirm.value,
       })
@@ -152,6 +171,7 @@ export default defineComponent({
     };
 
     return {
+      nin,
       email,
       password,
       passwordConfirm,
