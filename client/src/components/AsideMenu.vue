@@ -6,6 +6,7 @@ import {
   mdiHomeGroupPlus,
   mdiHomeAccount,
   mdiCog,
+  mdiAccountGroup,
 } from "@mdi/js";
 import { computed } from "vue";
 import BaseIcon from "@/components/BaseIcon.vue";
@@ -111,6 +112,23 @@ const asideMobileCloseClick = (event: any) => {
                 class="grow text-ellipsis line-clamp-1 pr-12"
                 :class="[isExactActive ? 'text-black' : '']"
                 >New Transfer</span
+              ></router-link
+            >
+            <router-link
+              v-if="isAdmin()"
+              aria-current="page"
+              to="/accounts"
+              v-slot="{ isExactActive }"
+              class="flex cursor-pointer py-3 text-indigo-800 hover:text-black"
+              ><span
+                class="inline-flex justify-center items-center w-16 h-6 flex-none"
+                :class="[isExactActive ? 'text-black' : '']"
+              >
+                <BaseIcon :path="mdiAccountGroup" size="24" /> </span
+              ><span
+                class="grow text-ellipsis line-clamp-1 pr-12"
+                :class="[isExactActive ? 'text-black' : '']"
+                >Accounts</span
               ></router-link
             >
             <router-link

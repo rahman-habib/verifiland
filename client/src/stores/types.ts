@@ -2,7 +2,10 @@ export interface User {
   fullname: string
   email: string
   password?: string
+  publicAddress?: string
   passwordConfirm?: string
+  nin?: number
+  role?: Array<string>
 }
 
 export enum Color {

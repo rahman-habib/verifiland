@@ -54,6 +54,12 @@ const router = createRouter({
       name: 'settings',
       beforeEnter: authGuard,
       component: () => import('../views/SettingsView.vue')
+    },
+    {
+      path: '/accounts',
+      name: 'accounts',
+      beforeEnter: authGuard,
+      component: () => import('../views/UsersView.vue')
     }
   ]
 })

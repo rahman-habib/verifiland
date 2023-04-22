@@ -1,18 +1,9 @@
+import type { User } from '@/stores/types'
 import { useUIStore } from './ui'
 import { API_URL } from './../services/config'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import router from '@/router'
-
-interface User {
-  fullname: string
-  email: string
-  password?: string
-  publicAddress?: string
-  passwordConfirm?: string
-  nin?: number
-  role?: Array<string>
-}
 
 export const useUserStore = defineStore({
   id: 'user',
@@ -21,11 +12,13 @@ export const useUserStore = defineStore({
     accessToken?: string | null
     loading: boolean
     error?: any
+    accounts: Array<User>
   } => ({
     user: null,
     accessToken: null,
     loading: false,
-    error: null
+    error: null,
+    accounts: []
   }),
   getters: {},
   actions: {
@@ -67,6 +60,22 @@ export const useUserStore = defineStore({
         console.log(error)
         this.error = error.response.data
         throw error.response.data
+      } finally {
+        useUIStore().hideLoader()
+      }
+    },
+
+    async getAllUsers() {
+      useUIStore().showLoader()
+      try {
+        const response = await axios.get(`${API_URL}/user/all`, {
+          headers: { Authorization: `Bearer ${this.accessToken}` }
+        })
+        this.accounts = response.data ?? []
+        this.accounts = this.accounts.filter((account) => account.email != this.user?.email)
+        console.log(this.user?.email, response.data)
+      } catch (error: any) {
+        console.log(error)
       } finally {
         useUIStore().hideLoader()
       }
