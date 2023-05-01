@@ -38,7 +38,7 @@ export default defineComponent({
                   class="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl"
                 >
                   Securely verify, register and transfer land ownership with ease -
-                  Powered by Hyperledger Fabric
+                  Powered by Ethereum Smart Contract
                 </p>
                 <div class="relative flex flex-col sm:flex-row sm:space-x-4">
                   <router-link

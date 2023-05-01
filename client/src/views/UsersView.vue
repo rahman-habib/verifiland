@@ -5,9 +5,9 @@
         <span
           class="shadow inline-flex justify-center items-center w-12 h-12 rounded-full bg-white text-black dark:bg-slate-900/70 dark:text-white mr-3"
         >
-          <BaseIcon :path="mdiHomeSilo" />
+          <BaseIcon :path="mdiAccountGroup" />
         </span>
-        <h1 class="text-2xl leading-tight">Assets</h1>
+        <h1 class="text-2xl leading-tight">Accounts</h1>
       </div>
     </section>
     <div class="shadow rounded-2xl flex-col dark:bg-slate-900/70 bg-white flex p-4">

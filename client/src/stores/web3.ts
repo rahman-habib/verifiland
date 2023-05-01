@@ -59,7 +59,7 @@ export const useWeb3Store = defineStore({
       if (registry) {
         const contract = window.TruffleContract(Land)
         contract.setProvider(this.provider)
-        this.landContract = await contract.at('0xF9114eDFc4191205B6a10241B67A9978b0a9055d')
+        this.landContract = await contract.at('0x546F313cceB0b737b8206784E381fB846585162f')
       }
     },
     async registerLand(data: any) {
@@ -75,7 +75,7 @@ export const useWeb3Store = defineStore({
 
         const buf = Buffer.from(JSON.stringify(data))
         const ipfsResult = await ipfs.add(buf)
-        const result = await this.landContract.registerLand(ipfsResult.path, { from: this.account })
+        await this.landContract.registerLand(ipfsResult.path, { from: this.account })
         useUIStore().showAlert({ type: 'success', message: 'Asset registered successfully' })
         useUIStore().hideLoader()
         router.push('/assets')

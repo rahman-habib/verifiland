@@ -24,12 +24,15 @@ export function useVerifyLand() {
           message: "Land asset with the speicified ID doesn't exist"
         })
       }
+      if (res.is_govt_approved == false) {
+        throw new Error('Land ID not valid')
+      }
 
       displayModal(res)
     } catch (error) {
       useUIStore().showAlert({
         type: 'danger',
-        message: "Land asset with the speicified ID doesn't exist"
+        message: "Land asset with the speicified ID doesn't exist or hasn't been approved"
       })
       console.log(error)
     }

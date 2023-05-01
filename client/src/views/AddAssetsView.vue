@@ -49,24 +49,31 @@
           <div class="mb-6 last:mb-0 relative">
             <label class="block font-bold mb-2">City</label>
             <div class="relative">
-              <input
+              <select
                 v-model="data.city"
-                placeholder="City"
-                type="text"
                 class="px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full dark:placeholder-gray-400 h-12 border bg-white dark:bg-slate-800"
-              />
+              >
+                <option value="" disabled selected>Select City</option>
+                <option v-for="(city, i) in cities" :key="`${i}_city`" :value="city">
+                  {{ city }}
+                </option>
+              </select>
             </div>
             <div class="text-xs text-gray-500 dark:text-slate-400 mt-1"></div>
           </div>
           <div class="mb-6 last:mb-0 relative">
-            <label class="block font-bold mb-2">LGA</label>
+            <label class="block font-bold mb-2">Local Government Area</label>
             <div class="relative">
-              <input
+              <select
                 v-model="data.lga"
-                placeholder="Local Government Area"
                 type="text"
                 class="px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full dark:placeholder-gray-400 h-12 border bg-white dark:bg-slate-800"
-              />
+              >
+                <option value="" disabled selected>Select Local Government Area</option>
+                <option v-for="(lga, i) in lgas" :key="`${i}_lga`" :value="lga">
+                  {{ lga }}
+                </option>
+              </select>
             </div>
             <div class="text-xs text-gray-500 dark:text-slate-400 mt-1"></div>
           </div>
@@ -123,6 +130,7 @@
                 v-model="data.ownership_type"
                 class="px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full dark:placeholder-gray-400 h-12 border bg-white dark:bg-slate-800"
               >
+                <option value="" selected disabled>Select Ownership Type</option>
                 <option value="family">Family</option>
                 <option value="private">Private</option>
                 <option value="family">Individual</option>
@@ -141,7 +149,7 @@
                   as="a"
                   :class="'btn-primary'"
                   :icon-size="24"
-                  :label="uploadedFileName"
+                  :label="'Upload Asset File'"
                   :icon="mdiUpload"
                 />
                 <input
@@ -156,7 +164,7 @@
                 v-if="files.deeds"
               >
                 <span class="text-ellipsis line-clamp-1">
-                  {{ files.deeds.name }}
+                  {{ uploadedFileName }}
                 </span>
               </div>
             </div>
@@ -186,6 +194,7 @@ import { useWeb3Store } from "@/stores/web3";
 import { useUIStore } from "@/stores/ui";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { cities, lgas } from "@/constants/location";
 
 type UploadedFiles = {
   [index: string]: {
@@ -206,7 +215,7 @@ export default defineComponent({
   },
 
   setup() {
-    const data = ref<AssetData>({});
+    const data = ref<AssetData>({ lga: "", city: "", ownership_type: "" });
     const uploadedFileName = ref("Asset File");
     const files = ref<UploadedFiles>({});
     const { registerLand } = useWeb3Store();
@@ -282,6 +291,8 @@ export default defineComponent({
       files,
       handleUpload,
       submitAsset,
+      cities,
+      lgas,
     };
   },
 });

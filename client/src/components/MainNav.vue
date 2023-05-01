@@ -4,7 +4,7 @@
       class="container relative flex flex-wrap items-center justify-between h-24 mx-auto overflow-hidden font-medium border-b border-gray-200 md:overflow-visible lg:justify-center sm:px-4 md:px-2 lg:px-0"
     >
       <div class="flex items-center justify-start w-1/4 h-full pr-4">
-        <a href="#_" class="inline-block py-4 md:py-0">
+        <a href="/" class="inline-block py-4 md:py-0">
           <span class="p-1 text-xl font-black leading-none text-gray-900"
             >verifiland.</span
           >
@@ -18,7 +18,7 @@
           class="flex-col w-full h-auto overflow-hidden bg-white rounded-lg md:bg-transparent md:overflow-visible md:rounded-none md:relative md:flex md:flex-row"
         >
           <a
-            href="#_"
+            href="/"
             class="inline-flex items-center block w-auto h-16 px-6 text-xl font-black leading-none text-gray-900 md:hidden"
             >verifiland<span class="text-indigo-600">.</span></a
           >
