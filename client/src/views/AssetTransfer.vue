@@ -26,7 +26,7 @@
               >
                 <option value="">-- Select Land --</option>
                 <option
-                  v-for="(asset, i) in assets"
+                  v-for="(asset, i) in allAssets"
                   :key="`${i}_asset`"
                   :value="asset.land_id"
                 >
@@ -119,13 +119,13 @@ import BaseIcon from "@/components/BaseIcon.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import DashboardContainer from "@/components/DashboardContainer.vue";
 import { mdiHomeSwitch } from "@mdi/js";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watchEffect } from "vue";
 import { useWeb3Store } from "@/stores/web3";
 import type { TransferData } from "@/stores/web3";
 import { storeToRefs } from "pinia";
 import { Alert } from "flowbite-vue";
 import { useUserStore } from "@/stores/user";
-import type { User } from "@/stores/types";
+import type { User, Land } from "@/stores/types";
 import { Modal } from "flowbite-vue";
 
 export default defineComponent({
@@ -144,6 +144,10 @@ export default defineComponent({
     const { createTransferRequest } = useWeb3Store();
     const { assets, transferredLands } = storeToRefs(useWeb3Store());
     const error = ref<{ [index: string]: string }>({});
+    const allAssets = ref<Land[]>([]);
+    watchEffect(
+      () => (allAssets.value = assets.value.filter((asset) => asset.is_govt_approved))
+    );
 
     const initTransferRequest = async () => {
       try {
@@ -173,14 +177,17 @@ export default defineComponent({
         error.value.new_owner = "Invalid new owner address";
       }
       if (data.value.new_owner.length > 0) {
-        try {
-          newOwner.value = await useUserStore().getUserByAddress(data.value.new_owner);
-          console.log(newOwner.value);
-          if (!newOwner.value) {
-            throw "Invalid address";
+        if (data.value.new_owner == useUserStore().user.publicAddress) {
+          error.value.new_owner = "You can not transfer asset to yourself";
+        } else {
+          try {
+            newOwner.value = await useUserStore().getUserByAddress(data.value.new_owner);
+            if (!newOwner.value) {
+              throw "Invalid address";
+            }
+          } catch (e) {
+            error.value.new_owner = "Invalid new owner address";
           }
-        } catch (e) {
-          error.value.new_owner = "Invalid new owner address";
         }
       }
 
@@ -197,7 +204,7 @@ export default defineComponent({
 
     return {
       mdiHomeSwitch,
-      assets,
+      allAssets,
       data,
       initTransferRequest,
       submitTransferRequest,
