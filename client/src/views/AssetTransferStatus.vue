@@ -55,7 +55,7 @@
                 <td>
                   <small
                     class="text-gray-500 dark:text-slate-400"
-                    v-if="asset.approved_at && asset.approved_at.length > 0"
+                    v-if="asset.approved_at"
                     >{{ new Date(asset.approved_at).toDateString() }}</small
                   >
                 </td>

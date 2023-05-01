@@ -119,6 +119,24 @@
             </td>
           </tr>
           <tr>
+            <th>Length</th>
+            <td class="text-right">
+              {{ modalAsset.lth }}
+            </td>
+          </tr>
+          <tr>
+            <th>Breadth</th>
+            <td class="text-right">
+              {{ modalAsset.breadth }}
+            </td>
+          </tr>
+          <tr>
+            <th>Surveyor No.</th>
+            <td class="text-right">
+              {{ modalAsset.surveyor_no }}
+            </td>
+          </tr>
+          <tr>
             <th>Land Registry Approval Status</th>
             <td class="text-right">
               <span
@@ -198,7 +216,7 @@ export default defineComponent({
     async function openFile(file: any) {
       let pdfWindow = window.open("");
       pdfWindow?.document.write(
-        "<html<head><title>Asset Proof</title><style>body{margin: 0px;}iframe{border-width: 0px;}</style></head>"
+        `<html<head><title>${modalAsset.value.land_id} - Asset Proof</title><style>body{margin: 0px;}iframe{border-width: 0px;}</style></head>`
       );
       pdfWindow?.document.write(
         "<body><embed width='100%' height='100%' src='" +
@@ -252,6 +270,7 @@ export default defineComponent({
     async function approve() {
       await approveLand(modalAsset.value.land_id);
       await getAllLands();
+      closeModal();
     }
 
     return {

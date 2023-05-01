@@ -32,7 +32,7 @@ export function useVerifyLand() {
     } catch (error) {
       useUIStore().showAlert({
         type: 'danger',
-        message: "Land asset with the speicified ID doesn't exist or hasn't been approved"
+        message: 'Land asset with the specified ID either does not exist or has not been approved.'
       })
       console.log(error)
     }

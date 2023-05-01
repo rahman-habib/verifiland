@@ -183,7 +183,9 @@ contract LandRegistrationSystem {
                 userTransferRequests[currentOwner][i].approved_at = block
                     .timestamp;
                 land.previous_owners.push(land.current_owner);
+                _detachLandFromAddress(landId, land.current_owner);
                 land.current_owner = userTransfers[i].new_owner;
+                userLandIds[userTransfers[i].new_owner].push(landId);
                 emit LandOwnershipTransferred(
                     landId,
                     lands[landId].previous_owners,
@@ -250,5 +252,20 @@ contract LandRegistrationSystem {
         TransferRequestTrack[] memory response = userTransferRequests[req];
 
         return response;
+    }
+
+    function _detachLandFromAddress(
+        uint256 landId,
+        address pastOwner
+    ) internal {
+        uint256 landCount = userLandIds[msg.sender].length;
+        for (uint256 i = 0; i < landCount; i++) {
+            if (userLandIds[pastOwner][i] == landId) {
+                userLandIds[pastOwner][i] = userLandIds[pastOwner][
+                    landCount - 1
+                ];
+                userLandIds[pastOwner].pop();
+            }
+        }
     }
 }

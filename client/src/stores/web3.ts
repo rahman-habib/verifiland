@@ -59,7 +59,7 @@ export const useWeb3Store = defineStore({
       if (registry) {
         const contract = window.TruffleContract(Land)
         contract.setProvider(this.provider)
-        this.landContract = await contract.at('0x546F313cceB0b737b8206784E381fB846585162f')
+        this.landContract = await contract.at('0x1BDBCb0ef12F3998DeEB707E07a3e230d11f9d7C')
       }
     },
     async registerLand(data: any) {
@@ -89,6 +89,7 @@ export const useWeb3Store = defineStore({
         this.assets = []
         await this.getWeb3()
         await this.getContract()
+        console.log(this.account)
         const ownedLands = await this.landContract.getOwnedLands.call({ from: this.account })
         this.setAssets(ownedLands)
       } catch (error) {
@@ -197,6 +198,9 @@ export const useWeb3Store = defineStore({
             previous_owners: land['previous_owners'],
             ...JSON.parse(Buffer.concat(chunks).toString())
           }
+          const landOwnerUser = await useUserStore().getUserByAddress(land['current_owner'])
+          details.fullname = landOwnerUser.fullname
+          details.email = landOwnerUser.email
           this.landOwnerIds.add(land['current_owner'])
           this.assets.push(details)
         })
