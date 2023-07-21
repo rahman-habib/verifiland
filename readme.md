@@ -4,8 +4,14 @@
 
 ### Architecture Overview
 <p align="center">
-    <img width="357" alt="image" src="https://github.com/olaysco/verifiland/assets/7990807/d6b7d0ff-63bb-46dc-a6b4-5f7f794f41e7">
+    <img width="666" alt="Screenshot 2023-04-12 at 22 33 15" src="https://github.com/olaysco/verifiland/assets/7990807/ab3ecb26-e5ac-4968-8529-7d1f7683ba30">
 </p>
+
+#### Tech Stack
+- TypeScript
+- Vue.js
+- Solidity
+- Nest.js
 
 
 ### The application flow
