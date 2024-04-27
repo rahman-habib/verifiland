@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getWeb3 } from '@/services/web3'
 import Land from '../abis/LandRegistrationSystem.json'
-import Web3 from 'web3'
+import type Web3 from 'web3'
 import ipfs from '@/services/ipfs'
 
 import { useUIStore } from './ui'
